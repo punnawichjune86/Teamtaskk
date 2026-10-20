@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08131A"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TeamTask">
+<title>TeamTask – จัดการงานกลุ่ม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--ac:#99D2EA;--glow:rgba(153,210,234,.35);--red:#ff6b6b;--grn:#5ee6a8;--tx:#eaf6fb;--mu:rgba(234,246,251,.6);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","IBM Plex Sans Thai","Inter",sans-serif;color:var(--tx);background:linear-gradient(160deg,#08131A,#183852) fixed;overflow-x:hidden}
+.orb{position:fixed;border-radius:50%;filter:blur(70px);z-index:0;pointer-events:none}
+.o1{width:380px;height:380px;background:rgba(153,210,234,.22);top:-80px;left:-60px}
+.o2{width:460px;height:460px;background:rgba(60,120,200,.25);bottom:-120px;right:-100px}
+.g{background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,.07) 100%);backdrop-filter:blur(35px) saturate(160%);-webkit-backdrop-filter:blur(35px) saturate(160%);border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 1px rgba(255,255,255,.5),0 30px 90px rgba(0,0,0,.6);border-radius:22px;position:relative;z-index:1}
+.g.act{border-color:rgba(153,210,234,.6);box-shadow:inset 0 1px 1px rgba(255,255,255,.5),0 0 22px var(--glow),0 20px 60px rgba(0,0,0,.5)}
+.g.late{border-color:var(--red);box-shadow:inset 0 1px 1px rgba(255,255,255,.5),0 0 24px rgba(255,107,107,.5),0 20px 60px rgba(0,0,0,.5)}
+.g.ok{border-color:var(--grn);box-shadow:inset 0 1px 1px rgba(255,255,255,.5),0 0 22px rgba(94,230,168,.4),0 20px 60px rgba(0,0,0,.5)}
+button,input,select{font:inherit;color:var(--tx)}
+input,select{font-size:16px;touch-action:manipulation;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:10px 14px;width:100%;outline:none}
+input:focus,select:focus,button:focus-visible{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
+select option{background:#14304a}
+.b{background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:9px 14px;cursor:pointer;box-shadow:inset 0 1px 1px rgba(255,255,255,.45)}
+.b:hover{background:rgba(153,210,234,.3)}
+.b.p{background:var(--ac);color:#08131A;font-weight:600;border-color:var(--ac)}
+.b.s{padding:5px 9px;font-size:12px;border-radius:9px}
+#auth{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:20px;position:relative;z-index:1}
+.box{width:min(420px,100%);padding:30px;display:grid;gap:12px}
+h1{font-size:30px;font-weight:700}h2{font-size:22px;margin-bottom:12px}h3{font-size:16px}
+.mu{color:var(--mu);font-size:13px}
+.tabs{display:flex;gap:6px}.tabs .b{flex:1}.tabs .on{background:var(--ac);color:#08131A}
+.app{display:grid;grid-template-columns:240px 1fr;gap:16px;padding:16px max(16px,env(safe-area-inset-right)) 16px max(16px,env(safe-area-inset-left));min-height:100vh;min-height:100dvh;max-width:1920px;margin:0 auto;position:relative;z-index:1}
+.side{padding:18px;display:flex;flex-direction:column;gap:6px;height:calc(100vh - 32px);height:calc(100dvh - 32px);position:sticky;top:16px;overflow:auto}
+.nav{text-align:left;background:none;border:0;padding:10px 12px;border-radius:12px;cursor:pointer}
+.nav:hover{background:rgba(255,255,255,.1)}.nav.on{background:rgba(153,210,234,.25);box-shadow:inset 0 0 0 1px rgba(153,210,234,.5)}
+.main{display:grid;gap:16px;align-content:start;min-width:0}
+.card{padding:18px}
+.kan{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.col{padding:14px;display:grid;gap:10px;align-content:start;min-height:160px}
+.task{padding:12px;border-radius:16px;display:grid;gap:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.stat .g{padding:14px}.stat b{font-size:26px;display:block}
+.bar{height:8px;border-radius:9px;background:rgba(255,255,255,.15);overflow:hidden}.bar i{display:block;height:100%;background:var(--ac);box-shadow:0 0 12px var(--ac)}
+.split{display:grid;grid-template-columns:1fr 320px;gap:16px}
+.chat{display:flex;flex-direction:column;height:520px;padding:14px}
+.msgs{flex:1;overflow:auto;display:grid;gap:8px;align-content:start;padding:4px}
+.msg{background:rgba(255,255,255,.1);border-radius:14px;padding:8px 12px;max-width:90%;font-size:14px}.msg.me{background:rgba(153,210,234,.3);justify-self:end}
+.msg small{display:block;color:var(--mu);font-size:11px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:#888}
+.dot.on{background:var(--grn);box-shadow:0 0 8px var(--grn)}.dot.typing{background:var(--ac);box-shadow:0 0 8px var(--ac)}.dot.away{background:#f5c04a}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#08131A;flex:none}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal div{min-height:78px;padding:6px;border-radius:12px;background:rgba(255,255,255,.07);font-size:12px;overflow:hidden}
+.cal .h{min-height:0;text-align:center;background:none;color:var(--mu)}.cal .td{outline:1px solid var(--ac)}
+.cal em{display:block;font-style:normal;background:rgba(153,210,234,.3);border-radius:6px;padding:1px 5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal em.l{background:rgba(255,107,107,.4)}.cal em.d{background:rgba(94,230,168,.35)}
+.vid{aspect-ratio:16/10;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.35);display:grid;place-items:center;position:relative}
+.vid video{width:100%;height:100%;object-fit:cover}.vid span{position:absolute;left:10px;bottom:8px;background:rgba(0,0,0,.45);padding:3px 10px;border-radius:10px;font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);padding:10px 20px;z-index:9}
+@media(min-width:1700px){.app{grid-template-columns:280px 1fr}.chat{height:640px}}
+@media(max-width:1100px){.app{grid-template-columns:200px 1fr}.split{grid-template-columns:1fr}.chat{height:440px}}
+@media(max-width:860px){.app{grid-template-columns:1fr;gap:12px;padding-top:10px}.side{height:auto;position:sticky;top:8px;z-index:20;flex-direction:row;align-items:center;overflow-x:auto;padding:10px;gap:4px;border-radius:18px}.side>*{flex:none;white-space:nowrap}.side h1{font-size:18px;margin:0 8px 0 4px!important}.side .mu,.side .row:last-child{display:none}.kan{grid-template-columns:1fr}.stat{grid-template-columns:repeat(2,1fr)}}
+@media(pointer:coarse){.b,.nav,select,input{min-height:44px}.b.s{min-height:38px;padding:7px 12px}}
+@media(max-width:600px){.cal{gap:3px}.cal div{min-height:54px;padding:3px;font-size:11px}.cal em{font-size:9px;padding:0 3px}.box{padding:22px}.card{padding:14px}h1{font-size:26px}h2{font-size:19px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<div id="root"></div>
+<script>
+const $=s=>document.querySelector(s),KEY='teamtask_v1',COL=['#99D2EA','#ffd27a','#b9a6ff','#7af0c4','#ff9fb2'];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const day=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const ST=['ต้องทำ','กำลังทำ','เสร็จแล้ว'];
+const PR={on:'ออนไลน์',typing:'กำลังพิมพ์',away:'พักผ่อน'};
+let S=null,me=null,view='board',cur=null,pres={},typT=null,toastT=null,calM=new Date(),media={cam:null,scr:null},bc=null;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+try{me=sessionStorage.getItem('tt_me')}catch(e){}
+if(!S){S={users:{u1:{id:'u1',name:'นุ่น',color:COL[1]},u2:{id:'u2',name:'ภูมิ',color:COL[2]},u3:{id:'u3',name:'มายด์',color:COL[3]}},accounts:{},
+projects:[{id:'p1',name:'รายงานกลุ่มวิชาการตลาด',due:day(12),tasks:[
+{id:'t1',t:'รวบรวมข้อมูลคู่แข่ง',st:0,due:day(-1),who:'u1'},{id:'t2',t:'ออกแบบสไลด์นำเสนอ',st:1,due:day(3),who:'u2'},{id:'t3',t:'สรุปผลสำรวจลูกค้า',st:2,due:day(-4),who:'u3'}],
+chat:[{id:'m1',u:'u1',x:'สวัสดีทุกคน อย่าลืมส่งข้อมูลคู่แข่งภายในวันนี้นะ',ts:Date.now()-3600000}]},
+{id:'p2',name:'งานกิจกรรมรับน้อง',due:day(25),tasks:[{id:'t4',t:'จองสถานที่',st:0,due:day(6),who:'u2'}],chat:[]}]};}
+cur=S.projects[0]?.id;
+const P=()=>S.projects.find(p=>p.id===cur)||S.projects[0];
+const U=id=>S.users[id]||{name:'ไม่ระบุ',color:'#888'};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}try{bc&&bc.postMessage({t:'s',s:S})}catch(e){}render()}
+try{bc=new BroadcastChannel('teamtask');bc.onmessage=e=>{const d=e.data;if(d.t==='s'){S=d.s;render()}else if(d.t==='hb'){pres[d.u]={st:d.st,ts:Date.now()};if(view==='team'||view==='meet'||view==='board')render()}}}catch(e){}
+function hb(st){if(!me||!bc)return;try{bc.postMessage({t:'hb',u:me,st:st||(document.hidden?'away':'on')})}catch(e){}}
+setInterval(()=>hb(),5000);document.addEventListener('visibilitychange',()=>hb());
+function status(id){if(id===me)return document.hidden?'away':(typT?'typing':'on');const p=pres[id];if(!p||Date.now()-p.ts>15000)return null;return p.st==='typing'?'typing':p.st==='away'?'away':'on'}
+function toast(m){clearTimeout(toastT);let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';t.className='g toast';document.body.appendChild(t)}t.textContent=m;t.style.display='block';toastT=setTimeout(()=>t.style.display='none',2500)}
+function login(id){me=id;try{sessionStorage.setItem('tt_me',id)}catch(e){}hb('on');render()}
+function mkUser(name,extra){const id='u'+uid();S.users[id]=Object.assign({id,name,color:COL[Object.keys(S.users).length%COL.length]},extra);return id}
+function guest(){const n=$('#gn').value.trim();if(!n)return toast('กรุณากรอกชื่อเล่น');const id=mkUser(n,{guest:1});save();login(id)}
+function social(p){const id=mkUser(p+' User',{via:p});save();login(id);toast('เข้าสู่ระบบด้วย '+p+' (โหมดสาธิต)')}
+let amode='in';
+function emailGo(){const e=$('#em').value.trim().toLowerCase(),pw=$('#pw').value;if(!/^\S+@\S+\.\S+$/.test(e))return toast('รูปแบบอีเมลไม่ถูกต้อง');if(pw.length<6)return toast('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+const a=S.accounts[e],h=btoa(unescape(encodeURIComponent(pw)));
+if(amode==='up'){if(a)return toast('อีเมลนี้ถูกใช้งานแล้ว');const n=$('#nm').value.trim()||e.split('@')[0];const id=mkUser(n,{email:e});S.accounts[e]={h,id};save();login(id)}
+else{if(!a||a.h!==h)return toast('อีเมลหรือรหัสผ่านไม่ถูกต้อง');login(a.id)}}
+function setMode(m){amode=m;render()}
+function logout(){try{sessionStorage.removeItem('tt_me')}catch(e){}stopMedia();me=null;render()}
+function authView(){return `<div id="auth"><div class="g box"><h1>TeamTask</h1><p class="mu">จัดการงานกลุ่ม ประชุม และแชทในที่เดียว</p>
+<div class="tabs"><button class="b ${amode==='guest'?'on':''}" onclick="setMode('guest')">ใช้งานด่วน</button><button class="b ${amode==='in'?'on':''}" onclick="setMode('in')">เข้าสู่ระบบ</button><button class="b ${amode==='up'?'on':''}" onclick="setMode('up')">สมัครสมาชิก</button></div>
+${amode==='guest'?`<input id="gn" placeholder="ชื่อเล่นของคุณ" maxlength="20" onkeydown="if(event.key==='Enter')guest()"><button class="b p" onclick="guest()">เข้าใช้งานทันที</button>`:
+`${amode==='up'?'<input id="nm" placeholder="ชื่อที่แสดง">':''}<input id="em" type="email" placeholder="อีเมล"><input id="pw" type="password" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)" onkeydown="if(event.key==='Enter')emailGo()"><button class="b p" onclick="emailGo()">${amode==='up'?'สมัครสมาชิก':'เข้าสู่ระบบ'}</button>`}
+<div class="mu" style="text-align:center">หรือ</div>
+<div class="row"><button class="b" style="flex:1" onclick="social('Google')">เข้าด้วย Google</button><button class="b" style="flex:1" onclick="social('Apple')">เข้าด้วย Apple</button></div>
+<p class="mu">ข้อมูลทั้งหมดบันทึกในเบราว์เซอร์ของคุณเท่านั้น</p></div></div>`}
+const NAV=[['board','บอร์ดงาน'],['mine','งานของฉัน'],['team','ทีมของฉัน'],['cal','ปฏิทิน'],['meet','ห้องประชุม'],['set','ตั้งค่าโปรไฟล์']];
+function go(v,p){view=v;if(p)cur=p;render()}
+function addProject(){const n=$('#np').value.trim();if(!n)return;const id='p'+uid();S.projects.push({id,name:n,due:day(14),tasks:[],chat:[]});cur=id;view='board';save()}
+function addTask(){const t=$('#tt').value.trim();if(!t)return toast('กรุณากรอกชื่องาน');P().tasks.push({id:'t'+uid(),t,st:0,due:$('#td').value||day(7),who:$('#tw').value});save();toast('เพิ่มงานแล้ว')}
+function mv(pid,tid,st){const t=S.projects.find(p=>p.id===pid).tasks.find(x=>x.id===tid);t.st=st;save()}
+function del(pid,tid){const p=S.projects.find(p=>p.id===pid);p.tasks=p.tasks.filter(x=>x.id!==tid);save()}
+function send(){const i=$('#ci'),x=i.value.trim();if(!x)return;P().chat.push({id:'m'+uid(),u:me,x,ts:Date.now()});typT=null;i.value='';save();hb('on');const m=$('.msgs');if(m)m.scrollTop=1e9}
+function typing(){clearTimeout(typT);typT=setTimeout(()=>{typT=null;hb('on')},2000);hb('typing')}
+const cls=t=>t.st===2?'ok':(t.due<=day(1)?'late':'act');
+function dl(t){if(t.st===2)return 'เสร็จแล้ว';const d=Math.round((new Date(t.due)-new Date(day(0)))/864e5);return d<0?`เลยกำหนด ${-d} วัน`:d===0?'ครบกำหนดวันนี้':`อีก ${d} วัน`}
+function taskCard(t,pid){return `<div class="g task ${cls(t)}"><b>${esc(t.t)}</b><div class="row mu"><span class="av" style="width:22px;height:22px;font-size:11px;background:${U(t.who).color}">${esc(U(t.who).name[0])}</span>${esc(U(t.who).name)} · ${esc(dl(t))}</div>
+<div class="row">${ST.map((s,i)=>i!==t.st?`<button class="b s" onclick="mv('${pid}','${t.id}',${i})">${s}</button>`:'').join('')}<button class="b s" onclick="del('${pid}','${t.id}')">ลบ</button></div></div>`}
+function board(){const p=P();if(!p)return '<div class="g card">ยังไม่มีโปรเจกต์ สร้างโปรเจกต์ใหม่ที่แถบด้านข้าง</div>';const n=p.tasks.length,d=p.tasks.filter(t=>t.st===2).length,pc=n?Math.round(d/n*100):0,late=p.tasks.filter(t=>t.st<2&&t.due<day(0)).length;
+const mem=[...new Set(p.tasks.map(t=>t.who))];
+return `<div class="g card"><h2>${esc(p.name)}</h2><div class="stat"><div class="g"><b>${n}</b><span class="mu">งานทั้งหมด</span></div><div class="g"><b>${pc}%</b><span class="mu">ความก้าวหน้า</span></div><div class="g ${late?'late':''}"><b>${late}</b><span class="mu">งานเลยกำหนด</span></div><div class="g"><b>${esc(p.due.split('-').reverse().join('/'))}</b><span class="mu">กำหนดส่งโปรเจกต์</span></div></div>
+<div class="bar" style="margin-top:14px"><i style="width:${pc}%"></i></div><div class="row" style="margin-top:12px"><span class="mu">สมาชิก:</span>${Object.values(S.users).map(u=>`<span class="row" style="gap:4px"><i class="dot ${status(u.id)||''}"></i>${esc(u.name)}</span>`).join('')}</div></div>
+<div class="g card"><div class="row"><input id="tt" placeholder="ชื่องานใหม่" style="flex:2;min-width:160px"><input id="td" type="date" value="${day(7)}" style="flex:1;min-width:130px"><select id="tw" style="flex:1;min-width:110px">${Object.values(S.users).map(u=>`<option value="${u.id}" ${u.id===me?'selected':''}>${esc(u.name)}</option>`).join('')}</select><button class="b p" onclick="addTask()">เพิ่มงาน</button></div></div>
+<div class="split"><div class="kan">${ST.map((s,i)=>`<div class="g col"><h3>${s} (${p.tasks.filter(t=>t.st===i).length})</h3>${p.tasks.filter(t=>t.st===i).map(t=>taskCard(t,p.id)).join('')||'<span class="mu">ยังไม่มีงาน</span>'}</div>`).join('')}</div>
+<div class="g chat"><h3 style="margin-bottom:8px">แชทกลุ่ม</h3><div class="msgs">${p.chat.map(m=>`<div class="msg ${m.u===me?'me':''}"><small>${esc(U(m.u).name)} · ${new Date(m.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</small>${esc(m.x)}</div>`).join('')||'<span class="mu">เริ่มคุยกับทีมได้เลย</span>'}</div>
+<div class="mu" style="min-height:18px">${Object.values(S.users).filter(u=>u.id!==me&&status(u.id)==='typing').map(u=>esc(u.name)+' กำลังพิมพ์...').join(' ')}</div>
+<div class="row" style="flex-wrap:nowrap"><input id="ci" placeholder="พิมพ์ข้อความ" oninput="typing()" onkeydown="if(event.key==='Enter')send()"><button class="b p" onclick="send()">ส่ง</button></div></div></div>`}
+function mine(){const L=[];S.projects.forEach(p=>p.tasks.filter(t=>t.who===me).forEach(t=>L.push([p,t])));L.sort((a,b)=>a[1].due.localeCompare(b[1].due));
+return `<div class="g card"><h2>งานของฉัน</h2><div class="grid3">${L.map(([p,t])=>`<div><div class="mu" style="margin:0 4px 6px">${esc(p.name)} · ${ST[t.st]}</div>${taskCard(t,p.id)}</div>`).join('')||'<span class="mu">ยังไม่มีงานที่มอบหมายให้คุณ ลองเพิ่มงานในบอร์ดแล้วเลือกชื่อของคุณ</span>'}</div></div>`}
+function team(){return `<div class="g card"><h2>ทีมของฉัน</h2><div class="grid3">${Object.values(S.users).map(u=>{const ts=S.projects.flatMap(p=>p.tasks).filter(t=>t.who===u.id),s=status(u.id);return `<div class="g card"><div class="row"><span class="av" style="background:${u.color}">${esc(u.name[0])}</span><div><b>${esc(u.name)}</b><div class="mu"><i class="dot ${s||''}"></i>${s?PR[s]:'ออฟไลน์'}</div></div></div><p class="mu" style="margin-top:10px">งาน ${ts.length} ชิ้น · เสร็จ ${ts.filter(t=>t.st===2).length} ชิ้น</p></div>`}).join('')}</div></div>`}
+function cal(){const y=calM.getFullYear(),m=calM.getMonth(),f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),tk=S.projects.flatMap(p=>p.tasks);let c='';
+['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d=>c+=`<div class="h">${d}</div>`);for(let i=0;i<f;i++)c+='<div style="background:none"></div>';
+for(let d=1;d<=n;d++){const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;c+=`<div class="${k===day(0)?'td':''}">${d}${tk.filter(t=>t.due===k).map(t=>`<em class="${t.st===2?'d':t.due<day(0)?'l':''}" title="${esc(t.t)}">${esc(t.t)}</em>`).join('')}</div>`}
+return `<div class="g card"><div class="row" style="justify-content:space-between"><h2>ปฏิทินกำหนดส่ง</h2><div class="row"><button class="b s" onclick="calM.setMonth(calM.getMonth()-1);render()">ก่อนหน้า</button><b>${calM.toLocaleDateString('th-TH',{month:'long',year:'numeric'})}</b><button class="b s" onclick="calM.setMonth(calM.getMonth()+1);render()">ถัดไป</button></div></div><div class="cal">${c}</div></div>`}
+async function cam(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return toast('เบราว์เซอร์นี้ไม่รองรับกล้อง โปรดใช้ Safari หรือ Chrome รุ่นล่าสุด');try{media.cam=await navigator.mediaDevices.getUserMedia({video:true,audio:true});attach();toast('เปิดกล้องและไมโครโฟนแล้ว')}catch(e){toast('เปิดกล้องไม่ได้: โปรดอนุญาตการเข้าถึงหรือเปิดหน้านี้ในแท็บใหม่')}}
+async function scr(){if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia)return toast('iPhone และ iPad ยังแชร์หน้าจอผ่านเบราว์เซอร์ไม่ได้ ใช้ MacBook หรือ iMac แทน');try{media.scr=await navigator.mediaDevices.getDisplayMedia({video:true});media.scr.getVideoTracks()[0].onended=()=>{media.scr=null;render()};attach();toast('กำลังแชร์หน้าจอ')}catch(e){toast('แชร์หน้าจอไม่ได้ในขณะนี้')}}
+function tog(k){if(!media.cam)return;media.cam.getTracks().filter(t=>t.kind===k).forEach(t=>t.enabled=!t.enabled);toast((k==='audio'?'ไมโครโฟน':'กล้อง')+(media.cam.getTracks().find(t=>t.kind===k).enabled?'เปิดอยู่':'ปิดอยู่'))}
+function stopMedia(){['cam','scr'].forEach(k=>{media[k]&&media[k].getTracks().forEach(t=>t.stop());media[k]=null});if(view==='meet')render()}
+function attach(){render()}
+function meet(){const others=Object.values(S.users).filter(u=>u.id!==me&&status(u.id));
+return `<div class="g card"><h2>ห้องประชุม</h2><div class="row" style="margin-bottom:14px"><button class="b p" onclick="cam()">เปิดกล้องและไมโครโฟน</button><button class="b" onclick="tog('audio')">เปิด/ปิดไมค์</button><button class="b" onclick="tog('video')">เปิด/ปิดกล้อง</button><button class="b" onclick="scr()">แชร์หน้าจอ</button><button class="b" onclick="stopMedia()">ออกจากห้อง</button></div>
+<div class="grid3"><div class="g vid ${media.cam?'act':''}">${media.cam?'<video id="vc" autoplay muted playsinline></video>':'<span class="mu" style="position:static;background:none">กล้องปิดอยู่</span>'}<span>${esc(U(me).name)} (คุณ)</span></div>
+${media.scr?`<div class="g vid act"><video id="vs" autoplay muted playsinline></video><span>หน้าจอของคุณ</span></div>`:''}
+${others.map(u=>`<div class="g vid"><span class="av" style="background:${u.color};width:64px;height:64px;font-size:26px">${esc(u.name[0])}</span><span><i class="dot ${status(u.id)}"></i>${esc(u.name)}</span></div>`).join('')}</div>
+<p class="mu" style="margin-top:12px">กล้องและหน้าจอของคุณแสดงผลจริง ส่วนสมาชิกที่ออนไลน์ในเบราว์เซอร์นี้จะแสดงเป็นการ์ดชื่อ การส่งภาพข้ามอุปกรณ์ต้องมีเซิร์ฟเวอร์สัญญาณ WebRTC เพิ่มเติม</p></div>`}
+function sets(){const u=U(me);return `<div class="g card" style="max-width:520px;display:grid;gap:12px"><h2>ตั้งค่าโปรไฟล์</h2><label class="mu">ชื่อที่แสดง</label><input id="sn" value="${esc(u.name)}" maxlength="20"><label class="mu">สีประจำตัว</label><div class="row">${COL.map(c=>`<button class="av" style="background:${c};border:${u.color===c?'3px solid #fff':'0'};cursor:pointer" onclick="S.users['${me}'].color='${c}';save()" aria-label="เลือกสี"></button>`).join('')}</div>
+<button class="b p" onclick="const v=$('#sn').value.trim();if(v){S.users['${me}'].name=v;save();toast('บันทึกแล้ว')}">บันทึกโปรไฟล์</button>
+<hr style="border:0;border-top:1px solid rgba(255,255,255,.2)"><h3>จัดการข้อมูล</h3><div class="row"><button class="b" onclick="logout()">ออกจากระบบ</button><button class="b" onclick="if(confirm('ลบข้อมูลทั้งหมดและเริ่มใหม่?')){try{localStorage.removeItem(KEY);sessionStorage.clear()}catch(e){}location.reload()}">ล้างข้อมูลทั้งหมด</button></div></div>`}
+function render(){const r=$('#root');if(!me||!S.users[me]){r.innerHTML=authView();return}
+const ci=$('#ci'),val=ci?ci.value:'',foc=ci&&document.activeElement===ci;
+const V={board,mine,team,cal,meet,set:sets}[view]();
+r.innerHTML=`<div class="app"><aside class="g side"><h1 style="font-size:22px;margin-bottom:8px">TeamTask</h1>${NAV.map(n=>`<button class="nav ${view===n[0]?'on':''}" onclick="go('${n[0]}')">${n[1]}</button>`).join('')}
+<div class="mu" style="margin:12px 4px 4px">โปรเจกต์</div>${S.projects.map(p=>`<button class="nav ${view==='board'&&P().id===p.id?'on':''}" onclick="go('board','${p.id}')">${esc(p.name)}</button>`).join('')}
+<div class="row" style="flex-wrap:nowrap;margin-top:6px"><input id="np" placeholder="โปรเจกต์ใหม่" onkeydown="if(event.key==='Enter')addProject()"><button class="b s" onclick="addProject()">เพิ่ม</button></div>
+<div class="row" style="margin-top:auto"><span class="av" style="background:${U(me).color}">${esc(U(me).name[0])}</span><div><b>${esc(U(me).name)}</b><div class="mu"><i class="dot ${status(me)||''}"></i>${PR[status(me)]||''}</div></div></div></aside><main class="main">${V}</main></div>`;
+const n=$('#ci');if(n&&ci){n.value=val;if(foc)n.focus()}const m=$('.msgs');if(m)m.scrollTop=1e9;
+if(media.cam&&$('#vc')){$('#vc').srcObject=media.cam;$('#vc').play().catch(()=>{})}if(media.scr&&$('#vs')){$('#vs').srcObject=media.scr;$('#vs').play().catch(()=>{})}}
+window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue){try{S=JSON.parse(e.newValue);render()}catch(x){}}});
+render();hb('on');
+</script>
+</body>
+</html>
